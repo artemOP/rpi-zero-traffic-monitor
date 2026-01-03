@@ -13,7 +13,7 @@ A Raspberry Pi Zero 2 W project that displays real-time traffic and ETA informat
 ## Hardware
 
 - Raspberry Pi Zero 2 W
-- SSD1305 128x32 OLED display (SPI)
+- SSD1305 128x32 OLED display (I2C)
 
 ## Installation
 

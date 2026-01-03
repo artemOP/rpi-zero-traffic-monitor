@@ -1,0 +1,5 @@
+{
+  "Content-Type": "application/json",
+  "X-Goog-Api-Key": "YOUR_GOOGLE_MAPS_API_KEY",
+  "X-Goog-FieldMask": "routes.duration,routes.distanceMeters,routes.polyline.encodedPolyline,routes.localizedValues,routes.travelAdvisory"
+}

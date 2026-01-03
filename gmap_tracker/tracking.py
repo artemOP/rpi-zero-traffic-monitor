@@ -30,7 +30,7 @@ class Tracker:
         self._session = aiohttp.ClientSession()
         self.task_running = asyncio.Event()
         self._display = SSD1305_128x32().__enter__()
-        self._display.font = self._display.font_folder_path / "small_6x8"
+        self.display.font = self.display.font_folder_path / "small_6x8"
 
         with open(self._locations_path, "r") as f:
             self.locations = json.load(f)
@@ -129,7 +129,7 @@ class Tracker:
         return self._display
 
     def update_display(self, data: dict[str, Any]) -> None:
-        self._display.fill(constants.Colour.BLACK)
+        self.display.fill(constants.Colour.BLACK)
         travel_seconds = int(data.get("routes", [{}])[0].get("duration", "").removesuffix("s"))
         eta = datetime.now(tz=ZoneInfo("Europe/London")) + timedelta(seconds=travel_seconds)
 
@@ -148,13 +148,14 @@ class Tracker:
         else:
             traffic_condition = "Heavy"
 
-        self._display.text(f"ETA:         {eta.strftime('%H:%M')}", 0, 0)
-        self._display.text(f"Travel time: {travel_seconds // 60} min", 0, 10)
-        self._display.text(f"Traffic:     {traffic_condition}", 0, 20)
+        self.display.text(f"ETA:         {eta.strftime('%H:%M')}", 0, 0)
+        self.display.text(f"Travel time: {travel_seconds // 60} min", 0, 10)
+        self.display.text(f"Traffic:     {traffic_condition}", 0, 20)
 
     @loop(minutes=2)
     async def task(self) -> None:
         if not (self.is_weekday and self.is_daytime):
+            self.display.fill(constants.Colour.BLACK)
             return
 
         try:

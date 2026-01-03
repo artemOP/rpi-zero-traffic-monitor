@@ -1,10 +1,19 @@
 from typing import TypeAlias, TypedDict
 
-from .enums import (ExtraComputation, FallbackReason, FallbackRoutingMode,
-                    RoadFeatureState, RouteLabels, RouteTravelMode,
-                    RoutingPreference, Speed, TollPass,
-                    TransitRoutingPreference, TransitTravelMode,
-                    VehicleEmissionType)
+from .enums import (
+    ExtraComputation,
+    FallbackReason,
+    FallbackRoutingMode,
+    RoadFeatureState,
+    RouteLabels,
+    RouteTravelMode,
+    RoutingPreference,
+    Speed,
+    TollPass,
+    TransitRoutingPreference,
+    TransitTravelMode,
+    VehicleEmissionType,
+)
 
 
 class Duration(TypedDict, total=False):

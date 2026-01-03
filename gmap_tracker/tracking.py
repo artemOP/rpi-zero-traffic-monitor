@@ -130,7 +130,7 @@ class Tracker:
 
     def update_display(self, data: dict[str, Any]) -> None:
         self.display.fill(constants.Colour.BLACK)
-        travel_seconds = int(data.get("routes", [{}])[0].get("duration", "").removesuffix("s"))
+        travel_seconds = int(data.get("routes", [{}])[0].get("duration", "0").removesuffix("s"))
         eta = datetime.now(tz=ZoneInfo("Europe/London")) + timedelta(seconds=travel_seconds)
 
         travel_advisory = data.get("routes", [{}])[0].get("travelAdvisory", {}).get("speedReadingIntervals", [])

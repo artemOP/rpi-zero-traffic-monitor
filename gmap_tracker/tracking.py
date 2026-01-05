@@ -141,12 +141,12 @@ class Tracker:
                 speeds[speed] = 0
             speeds[speed] += 1
 
-        if speeds.get("NORMAL", 0) >= speeds.get("SLOW", 0) and speeds.get("NORMAL", 0) >= speeds.get("TRAFFIC_JAM", 0):
-            traffic_condition = "Normal"
-        elif speeds.get("SLOW", 0) >= speeds.get("TRAFFIC_JAM", 0):
-            traffic_condition = "Medium"
+        if speeds.get("TRAFFIC_JAM", 0) > 0:
+            traffic_condition = f"{speeds['TRAFFIC_JAM']}x Jam"
+        elif speeds.get("SLOW", 0) > 0:
+            traffic_condition = f"{speeds['SLOW']}x Slow"
         else:
-            traffic_condition = "Heavy"
+            traffic_condition = "Normal"
 
         self.display.text(f"ETA:         {eta.strftime('%H:%M')}", 0, 0)
         self.display.text(f"Travel time: {travel_seconds // 60} min", 0, 10)

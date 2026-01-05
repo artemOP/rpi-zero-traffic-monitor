@@ -77,6 +77,11 @@ class ExponentialBackoff[T: bool | Literal[True] | Literal[False]]:
         self._exp = min(self._exp + 1, self._max)
         return self._randfunc(0, self._base * 2**self._exp)
 
+    def reset(self) -> None:
+        """Reset the backoff to its initial state."""
+        self._exp = 0
+        self._last_invocation = time.monotonic()
+
 
 class SleepHandle:
     __slots__ = ("future", "loop", "handle")
@@ -209,6 +214,7 @@ class Loop[LF: Callable[..., Coroutine[Any, Any, Any]]]:
                 try:
                     await self.coro(*args, **kwargs)
                     self._last_iteration_failed = False
+                    backoff.reset()
                 except self._valid_exception as exc:
                     self._last_iteration_failed = True
                     if not self.reconnect:

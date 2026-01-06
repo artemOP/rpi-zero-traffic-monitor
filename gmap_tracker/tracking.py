@@ -22,9 +22,10 @@ class Tracker:
     headers: dict[str, str]
     task_running: asyncio.Event
 
-    def __init__(self, locations_path: Path, headers_path: Path):
+    def __init__(self, locations_path: Path, headers_path: Path, offset: timedelta = timedelta()) -> None:
         self._locations_path = locations_path
         self._headers_path = headers_path
+        self._offset = offset
 
     async def __aenter__(self) -> Self:
         self._session = aiohttp.ClientSession()
@@ -128,9 +129,18 @@ class Tracker:
     def display(self) -> SSD1305:
         return self._display
 
+    @property
+    def offset(self) -> timedelta:
+        return self._offset
+
+    @offset.setter
+    def offset(self, value: timedelta) -> None:
+        self._offset = value
+
     def update_display(self, data: dict[str, Any]) -> None:
         self.display.fill(constants.Colour.BLACK)
-        travel_seconds = int(data.get("routes", [{}])[0].get("duration", "0").removesuffix("s"))
+        travel_seconds_string = data.get("routes", [{}])[0].get("duration", "0").removesuffix("s")
+        travel_seconds = int(travel_seconds_string) + int(self.offset.total_seconds())
         eta = datetime.now(tz=ZoneInfo("Europe/London")) + timedelta(seconds=travel_seconds)
 
         travel_advisory = data.get("routes", [{}])[0].get("travelAdvisory", {}).get("speedReadingIntervals", [])
@@ -183,6 +193,7 @@ async def main():
     async with Tracker(
         Path("./gmap_tracker/locations.json"),
         Path("./gmap_tracker/headers.json"),
+        offset=timedelta(minutes=10),
     ) as tracker:
         while tracker.task_running.is_set():
             await asyncio.sleep(1)

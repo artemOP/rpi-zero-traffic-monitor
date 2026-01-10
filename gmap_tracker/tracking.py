@@ -89,7 +89,7 @@ class Tracker:
             "routeModifiers": route_modifiers,
             "languageCode": "en-GB",
             "units": "IMPERIAL",
-            "extraComputations": [ExtraComputation.TRAFFIC_ON_POLYLINE],
+            "extraComputations": [],
         }
         return self._request_body
 
@@ -162,7 +162,7 @@ class Tracker:
         self.display.text(f"Travel time: {travel_seconds // 60} min", 0, 10)
         self.display.text(f"Traffic:     {traffic_condition}", 0, 20)
 
-    @loop(minutes=2)
+    @loop(minutes=3)
     async def task(self) -> None:
         if not (self.is_weekday and self.is_daytime):
             self.display.fill(constants.Colour.BLACK)
